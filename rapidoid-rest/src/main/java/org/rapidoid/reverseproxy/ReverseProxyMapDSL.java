@@ -47,6 +47,8 @@ public class ReverseProxyMapDSL extends RapidoidThing {
 
 	private volatile LoadBalancer loadBalancer;
 
+	private volatile OnErrorCallback onErrorCallback;
+
 	public ReverseProxyMapDSL(String uriPrefix) {
 		this.uriPrefix = uriPrefix;
 	}
@@ -94,7 +96,8 @@ public class ReverseProxyMapDSL extends RapidoidThing {
 
 		LoadBalancer balancer = loadBalancer != null ? loadBalancer : new RoundRobinLoadBalancer();
 		ProxyMapping mapping = new ProxyMapping(uriPrefix, balancer, proxyUpstreams);
-		return new ReverseProxy(mapping);
+		if (onErrorCallback != null) return new ReverseProxy(mapping, onErrorCallback);
+		else return new ReverseProxy(mapping);
 	}
 
 	public String[] roles() {
@@ -130,6 +133,11 @@ public class ReverseProxyMapDSL extends RapidoidThing {
 
 	public ReverseProxyMapDSL loadBalancer(LoadBalancer loadBalancer) {
 		this.loadBalancer = loadBalancer;
+		return this;
+	}
+
+	public ReverseProxyMapDSL onErrorCallback(OnErrorCallback errorHandler){
+		this.onErrorCallback = errorHandler;
 		return this;
 	}
 }
