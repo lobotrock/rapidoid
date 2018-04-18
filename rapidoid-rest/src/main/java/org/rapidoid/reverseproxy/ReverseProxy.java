@@ -141,14 +141,14 @@ public class ReverseProxy extends AbstractReverseProxyBean<ReverseProxy> impleme
 				Jobs.after(retryDelay()).milliseconds(() -> process(req, resp, mapping, attempts + 1, since));
 
 			} else {
-				if(!onErrorCallback.handleError(req, resp, error, mapping, LogLevel.ERROR)){
-					HttpIO.INSTANCE.errorAndDone(req, U.rte("Couldn't connect to the upstream!", error), LogLevel.ERROR);
+				if(!onErrorCallback.handleError(req, resp, error, mapping, LogLevel.DEBUG)){
+					HttpIO.INSTANCE.errorAndDone(req, U.rte("Couldn't connect to the upstream!", error), LogLevel.DEBUG);
 				}
 			}
 
 		} else {
-			if(!onErrorCallback.handleError(req, resp, error, mapping, LogLevel.DEBUG)) {
-				HttpIO.INSTANCE.errorAndDone(req, U.rte("Couldn't connect to the upstream!", error), LogLevel.DEBUG);
+			if(!onErrorCallback.handleError(req, resp, error, mapping, LogLevel.ERROR)) {
+				HttpIO.INSTANCE.errorAndDone(req, U.rte("Couldn't connect to the upstream!", error), LogLevel.ERROR);
 			}
 		}
 	}
